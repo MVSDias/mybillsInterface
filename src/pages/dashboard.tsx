@@ -1,0 +1,197 @@
+import { ArrowDown, ArrowUp, Calendar, TrendingUp, Wallet } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  type PieLabelRenderProps,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import Card from "../components/Card";
+import MonthYearSelect from "../components/MonthYearSelect";
+import { getTransactionsMonthly, getTransactionsSummary } from "../services/transactionService";
+import type { MonthlyItemsType, TransactionsSummary } from "../types/transactionsTypes";
+import { formatCurrency } from "../utils/formaters";
+
+const initialSummary = {
+  totalIncomes: 0,
+  totalExpenses: 0, 
+  balance: 0, 
+  expensesByCategory: [],
+};
+
+const Dashboard = () => {
+  const currentDate = new Date(); 
+  const [month, setMonth] = useState(currentDate.getMonth() + 1); 
+  const [year, setYear] = useState<number>(currentDate.getFullYear());
+  const [summary, setSummary] = useState<TransactionsSummary>(initialSummary); 
+  const [monthlyItems, setMonthlyItems] = useState<MonthlyItemsType[]>([]);
+
+  // QUANDO A TELA RENDERIZAR VAI EXECUTAR ESSAS CHAMADAS A API.
+  useEffect(() => {
+    async function loadTransactionsSummary() {
+      try {
+        const response = await getTransactionsSummary(month, year);
+        setSummary(response); 
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadTransactionsSummary();
+  }, [month, year]);
+
+  useEffect(() => {
+    // aqui faço a chamada a api quando a tela renderizar
+    async function loadTransactionsMonthly() {
+      try {
+        const response = await getTransactionsMonthly(month, year);
+        console.log(response);
+        setMonthlyItems(response.history);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadTransactionsMonthly();
+  }, [month, year]);
+
+  // crio uma função pra juntar o nome a porcentagem de cada parte do gráfico e...
+  const renderPieChartLabel = ({ name = "", percent = 0 }: PieLabelRenderProps) => {
+    return `${name}: ${(percent * 100).toFixed(1)}%`;
+  };
+  
+
+  // crio uma função que mostra informações ao passar o mouse por cima de cada fatia do gráfico de ""pizza""
+  const formatToolTipValue = (value: number | string): string => {
+    return formatCurrency(typeof value === "number" ? value : 0); 
+  };
+
+  return (
+    <div className="container-app py-6">
+      <div className="flex flex-col md:items-center md:flex-row justify-between items-start  mb-6">
+        <h1 className="text-2xl  font-bold mb-4 md:mb-0">Dashboard</h1>
+        <MonthYearSelect
+          month={month}
+          year={year}
+          onChangeMonth={setMonth}
+          onChangeYear={setYear}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card
+          icon={<Wallet size={20} className="text-primary-500" />}
+          title="Saldo"
+          hover
+          glowEffect={summary.balance > 0}
+        >
+          <p
+            className={`text-2xl font-semibold mt-2 ${
+              summary.balance > 0 ? "text-primary-500" : "text-red-300"
+            }
+            `}
+          >
+            {formatCurrency(summary.balance)}
+          </p>
+        </Card>
+        <Card icon={<ArrowUp size={20} className="text-primary-500" />} title="Receitas" hover>
+          <p className="text-2xl font-semibold mt-2 text-primary-500">
+            {formatCurrency(summary.totalIncomes)}
+          </p>
+        </Card>
+        <Card icon={<ArrowDown size={20} className="text-red-600" />} title="Despesas" hover>
+          <p className="text-2xl font-semibold mt-2 text-red-600">
+            {formatCurrency(summary.totalExpenses)}
+          </p>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 mt-8">
+        <Card
+          icon={<TrendingUp size={20} className="text-primary-500" />}
+          hover
+          title="Despesas por Categoria"
+        >
+          {summary.expensesByCategory.length > 0 ? ( 
+            <div className="h-72 mt-4">
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={summary.expensesByCategory}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100} 
+                    dataKey="amount"
+                    nameKey="categoryName"
+                    label={renderPieChartLabel}
+                  >
+                    {summary.expensesByCategory.map((entry) => (
+                      <Cell key={entry.categoryId} fill={entry.categoryColor} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={formatToolTipValue} />
+                  
+                </PieChart>
+              </ResponsiveContainer>
+            </div> 
+          ) : (
+            <div className="flex items-center justify-center h=64 text-gray-500">
+              Nenhuma despesa registrada nesse perído
+            </div>
+          )}
+        </Card>
+        <Card
+          icon={<Calendar size={20} className="text-primary-500" />}
+          title="histórico Mensal"
+          hover
+          className="min-h-80 p-2.5"
+        >
+          <div className="h-72 mt-4">
+            {monthlyItems.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={monthlyItems} margin={{ left: 40 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.1" />
+                  <XAxis
+                    dataKey="name"
+                    stroke="#94A3b8"
+                    tick={{ style: { textTransform: "capitalize" } }}
+                  />
+                  <YAxis
+                    stroke="#94A3b8"
+                    tickFormatter={formatCurrency}
+                    tick={{ style: { fontSize: 12 } }}
+                  />
+                  <Tooltip
+                    formatter={formatCurrency}
+                    contentStyle={{ 
+                      backgroundColor: "#0c0c0c", 
+                      borderColor: "#201f1f" 
+                    }}
+                    labelStyle={{color: "#f8f8f8"}}
+                  />
+                  <Legend />
+                  <Bar dataKey="expenses" name="Despesas" fill="#ec3c62" />
+                  <Bar dataKey="income" name="Receitas" fill="#00fd33" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h=64 text-gray-500">
+                Nenhuma despesa registrada nesse perído
+              </div>
+            )}
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
