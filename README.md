@@ -84,7 +84,7 @@ MongoDB (ou outro banco compatível)
 bash
 Copiar
 Editar
-git clone https://github.com/MVSDias/MYBILLS.git
+git clone https://github.com/MVSDias/mybillsInterface.git
 cd mybills
 
 
