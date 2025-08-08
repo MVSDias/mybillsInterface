@@ -1,69 +1,127 @@
-# React + TypeScript + Vite
+# 💰 MyBills - Controle Financeiro | Financial Control
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> Aplicação web fullstack para gerenciamento financeiro pessoal.  
+> Fullstack web application for personal financial management.
 
-Currently, two official plugins are available:
+------
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🧠 Sobre | About
 
-## Expanding the ESLint configuration
+**MyBills** é um projeto de controle financeiro pessoal com cadastro, login, registro de transações (entradas e saídas), gráficos, responsividade e integração com Firebase e uma API Fastify + Prisma.  
+**MyBills** is a personal financial control project with registration, login, transaction logging (incomes and expenses), charts, responsiveness, and integration with Firebase and a Fastify + Prisma API.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+------
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Screenshots 
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+![Tela inicial](./public/screenshots/ex_pageHome.png)
+![Tela de login](./public/screenshots/pageLogin.png)
+![Tela de dashboard](./public/screenshots/dashboard.png)
+![Tela de transações](./public/screenshots/ex_transactions.png)
+![Tela de nova transação](./public/screenshots/transaction.png)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📁 Estrutura do Projeto | Project Structure
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+MyBills/
+├── interface/     # Frontend (React + TypeScript + TailwindCSS)
+├── api/           # Backend (Fastify + TypeScript + Prisma + Firebase Admin)
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+
+-------
+
+🚀 Funcionalidades | Features
+
+| Português                                  | English                                  |
+| ------------------------------------------ | ---------------------------------------- |
+| Autenticação com Firebase (Email + Google) | Firebase Authentication (Email + Google) |
+| Registro e login de usuários               | User registration and login              |
+| Registro de transações financeiras         | Register financial transactions          |
+| Filtro por mês e ano                       | Filter by month and year                 |
+| Gráficos de pizza para entradas e saídas   | Pie charts for incomes and expenses      |
+| Dashboard resumida com totalizadores       | Summary dashboard with totals            |
+| Responsividade total                       | Fully responsive design                  |
+
+
+------
+
+🛠️ Tecnologias | Technologies
+Frontend (interface):
+
+React
+
+TypeScript
+
+Tailwind CSS
+
+React Router Dom
+
+React Hook Form
+
+Firebase Auth (client)
+
+Axios
+
+Backend (api):
+
+Fastify
+
+TypeScript
+
+Firebase Admin SDK
+
+Prisma ORM
+
+MongoDB (ou outro banco compatível)
+
+
+-------
+
+
+📦 Instalação | Installation
+
+🔹 Clonar o repositório | Clone the repository
+bash
+Copiar
+Editar
+git clone https://github.com/MVSDias/MYBILLS.git
+cd mybills
+
+
+🔹 FRONTEND - Interface
+bash
+Copiar
+Editar
+cd interface
+npm install
+npm run dev
+Acesse: http://localhost:5173
+Access: http://localhost:5173
+
+
+🔹 BACKEND - API
+bash
+Copiar
+Editar
+cd api
+npm install
+npx prisma generate
+npx prisma migrate dev
+npm run start
+A API estará disponível em: http://localhost:3333/api
+The API will be available at: http://localhost:3333/api
+
+
+--------
+
+📄 Licença | License
+MIT License.
+Esse projeto é de código aberto, sinta-se livre para contribuir.
+This project is open source, feel free to contribute!
+
+-------
+
+
+🙋‍♂️ Autor | Author
+Nome	Marcus Dias
+GitHub	github.com/MVSDias
