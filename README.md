@@ -95,8 +95,8 @@ Editar
 cd interface
 npm install
 npm run dev
-Acesse: http://localhost:5173
-Access: http://localhost:5173
+Acesse: https://mybills-interface.vercel.app/
+Access: https://mybills-interface.vercel.app/
 
 
 🔹 BACKEND - API
@@ -108,8 +108,8 @@ npm install
 npx prisma generate
 npx prisma migrate dev
 npm run start
-A API estará disponível em: http://localhost:3333/api
-The API will be available at: http://localhost:3333/api
+A API estará disponível em: https://mybillsapi.onrender.com/
+The API will be available at: https://mybillsapi.onrender.com/
 
 
 --------
@@ -123,5 +123,6 @@ This project is open source, feel free to contribute!
 
 
 🙋‍♂️ Autor | Author
+
 Nome	Marcus Dias
 GitHub	github.com/MVSDias
